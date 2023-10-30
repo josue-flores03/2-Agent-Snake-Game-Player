@@ -5,7 +5,7 @@ import random
 CANVAS_WIDTH = 400  # Width of drawing canvas in pixels
 CANVAS_HEIGHT = 400  # Height of drawing canvas in pixels
 UNIT_SIZE = 20  # Decides how thick the snake is
-SPEED = 5  # Greater value here increases the speed of motion of the snakes
+SPEED = 15  # Greater value here increases the speed of motion of the snakes
 
 
 class Snake:
