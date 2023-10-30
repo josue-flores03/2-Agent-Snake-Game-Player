@@ -4,8 +4,8 @@ from enum import Enum
 from collections import namedtuple
 
 pygame.init()
-font = pygame.font.Font('arial.ttf', 25)
-#font = pygame.font.SysFont('arial', 25)
+# font = pygame.font.Font('arial.ttf', 25)
+font = pygame.font.SysFont('arial', 25)
 
 class Direction(Enum):
     RIGHT = 1
@@ -23,7 +23,7 @@ GREEN = (0, 255, 0)
 BLACK = (0,0,0)
 
 BLOCK_SIZE = 20
-SPEED = 20
+SPEED = 10
 
 class SnakeGame:
     
@@ -84,22 +84,22 @@ class SnakeGame:
                 pygame.quit()
                 quit()
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_LEFT:
+                if event.key == pygame.K_LEFT and not self.direction1 == Direction.RIGHT:
                     self.direction1 = Direction.LEFT
-                elif event.key == pygame.K_RIGHT:
+                elif event.key == pygame.K_RIGHT and not self.direction1 == Direction.LEFT:
                     self.direction1 = Direction.RIGHT
-                elif event.key == pygame.K_UP:
+                elif event.key == pygame.K_UP and not self.direction1 == Direction.DOWN:
                     self.direction1 = Direction.UP
-                elif event.key == pygame.K_DOWN:
+                elif event.key == pygame.K_DOWN and not self.direction1 == Direction.UP:
                     self.direction1 = Direction.DOWN
                 
-                if event.key == pygame.K_a:
+                if event.key == pygame.K_a and not self.direction2 == Direction.RIGHT:
                     self.direction2 = Direction.LEFT
-                elif event.key == pygame.K_d:
+                elif event.key == pygame.K_d and not self.direction2 == Direction.LEFT:
                     self.direction2 = Direction.RIGHT
-                elif event.key == pygame.K_w:
+                elif event.key == pygame.K_w and not self.direction2 == Direction.DOWN:
                     self.direction2 = Direction.UP
-                elif event.key == pygame.K_s:
+                elif event.key == pygame.K_s and not self.direction2 == Direction.UP:
                     self.direction2 = Direction.DOWN
         
         # 2. move if alive
