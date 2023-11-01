@@ -6,7 +6,7 @@ from one_player_npg import SnakeGameAI, Direction, Point
 from model import Linear_QNet, QTrainer
 from graph_plots import plot
 
-MAX_MEMORY = 100000
+MAX_MEMORY = 100_000
 BATCH_SIZE = 1000
 lr = 0.001
 
@@ -38,16 +38,16 @@ class Agent:
 
         state = [
             # Danger straight
-            (dir_r and game.is_collision(point_r)) or
-            (dir_l and game.is_collision(point_l)) or
-            (dir_u and game.is_collision(point_u)) or
-            (dir_d and game.is_collision(point_d)),
+            (dir_r and game.is_collision(point_r)) or 
+            (dir_l and game.is_collision(point_l)) or 
+            (dir_u and game.is_collision(point_u)) or 
+            (dir_d and game.is_collision(point_d)), 
 
             # Danger right
-            (dir_r and game.is_collision(point_d)) or
-            (dir_l and game.is_collision(point_u)) or
-            (dir_u and game.is_collision(point_r)) or
-            (dir_d and game.is_collision(point_l)),
+            (dir_r and game.is_collision(point_d)) or 
+            (dir_l and game.is_collision(point_u)) or 
+            (dir_u and game.is_collision(point_r)) or 
+            (dir_d and game.is_collision(point_l)), 
 
             # Danger left
             (dir_r and game.is_collision(point_u)) or
@@ -103,8 +103,8 @@ class Agent:
     
 
 def train():
-    scores_list = []
-    mean_scores_list = []
+    plot_scores = []
+    plot_mean_scores = []
     total_score = 0
     record = 0
     agent = Agent()
@@ -120,7 +120,6 @@ def train():
         # perform move and get new state
         reward, game_over, score = game.play_step(final_move)
         new_state = agent.get_state(game)
-
         # train short memory (one step)
         agent.train_short_memory(old_state, final_move, reward, new_state, game_over)
 
@@ -139,11 +138,11 @@ def train():
             
             print('Game ', agent.n_games, 'Score ', score, "Record ", record)
 
-            scores_list.append(score)
+            plot_scores.append(score)
             total_score += score
             mean_score = total_score / agent.n_games
-            mean_scores_list.append(mean_score)
-            plot(scores_list, mean_scores_list)
+            plot_mean_scores.append(mean_score)
+            plot(plot_scores, plot_mean_scores)
 
 
 if __name__ == '__main__':

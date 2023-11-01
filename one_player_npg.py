@@ -22,7 +22,7 @@ BLUE = (0, 0, 255)
 BLACK = (0,0,0)
 
 BLOCK_SIZE = 20
-SPEED = 10
+SPEED = 40
 
 class SnakeGameAI:
     
@@ -74,7 +74,7 @@ class SnakeGameAI:
         if self.is_collision() or self.frame_iteration > 100  * len(self.snake):
             game_over = True
             reward = -10
-            return game_over, self.score
+            return reward, game_over, self.score
             
         # 4. place new food or just move
         if self.head == self.food:
@@ -87,8 +87,9 @@ class SnakeGameAI:
         # 5. update ui and clock
         self._update_ui()
         self.clock.tick(SPEED)
+
         # 6. return game over and score
-        return game_over, game_over, self.score
+        return reward, game_over, self.score
     
     def is_collision(self, pt = None):
         if pt is None:
@@ -97,7 +98,7 @@ class SnakeGameAI:
         if pt.x > self.w - BLOCK_SIZE or pt.x < 0 or pt.y > self.h - BLOCK_SIZE or pt.y < 0:
             return True
         # hits itself
-        if self.head in self.snake[1:]:
+        if pt in self.snake[1:]:
             return True
         
         return False
@@ -129,7 +130,7 @@ class SnakeGameAI:
             next_idx = (idx - 1) % 4
             new_dir = clock_wise[next_idx] # left turn r -> u -> l -> d
 
-        self.riection = new_dir
+        self.direction = new_dir
 
         x = self.head.x
         y = self.head.y
