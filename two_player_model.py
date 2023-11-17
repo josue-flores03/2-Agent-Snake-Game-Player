@@ -46,7 +46,7 @@ class QTrainer:
 
 
 
-    def train_step(self, state, action, reward, next_state, game_over):
+    def train_step(self, state, action, reward, next_state, game_over, other_model_path = None):
         state = torch.tensor(state, dtype = torch.float)
         next_state = torch.tensor(next_state, dtype = torch.float)
         action = torch.tensor(action, dtype = torch.long)
@@ -61,14 +61,23 @@ class QTrainer:
         
         # Get predicted Q values with current states
         pred = self.model(state)
+        other_model = Linear_QNet(15, 256, 3) # initialize your model class
+        
+        if other_model_path == '1':
+            other_model.load_state_dict(torch.load('model/model1.pth'))
+        elif other_model_path == '2':
+            other_model.load_state_dict(torch.load('model/model2.pth'))
 
         # Get predicted Q values with next states
         target = pred.clone()
         for idx in range(len(game_over)):
             Q_new = reward[idx]
             if not game_over[idx]:
-                Q_new = reward[idx] + self.gamma * torch.max(self.model(next_state[idx]))
-            
+                if other_model_path == None:
+                    Q_new = reward[idx] + self.gamma * torch.max(self.model(next_state[idx]))
+                else:
+                    Q_new = torch.max(other_model(next_state[idx])) * (reward[idx] + self.gamma * torch.max(self.model(next_state[idx])))
+
             target[idx][torch.argmax(action).item()] = Q_new
 
         self.optimizer.zero_grad()

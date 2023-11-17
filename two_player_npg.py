@@ -109,13 +109,13 @@ class SnakeGameAI:
         # Both snakes are dead
         if self.is_collision() or self.frame_iteration > 100 * len(self.snake1) or self.frame_iteration > 100 * len(self.snake2):
             game_over = True
-            reward = -20
+            reward = -10
             return reward, game_over, self.score
         
-        # One snake is dead
-        if not self.is_collision():
-            if self.alive1 and not self.alive2 or not self.alive1 and self.alive2:
-                reward += -10
+        # # One snake is dead
+        # if not self.is_collision():
+        #     if self.alive1 and not self.alive2 or not self.alive1 and self.alive2:
+        #         reward += -10
             
         # 4. place new food or just move if alive
         if self.alive1:
@@ -172,7 +172,7 @@ class SnakeGameAI:
             if self.head2 in self.snake1[1:]:
                 self.alive2 = False  
 
-            if not self.alive1 and not self.alive2:
+            if not self.alive1 or not self.alive2:
                 return True
             return False
         

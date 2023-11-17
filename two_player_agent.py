@@ -211,14 +211,14 @@ class Agent:
 
 
 
-    def train_long_memory(self):
+    def train_long_memory(self, other_model):
         if len(self.memory) > BATCH_SIZE:
             memory_sample = random.sample(self.memory, BATCH_SIZE) # returns a list of tuples
         else:
             memory_sample = self.memory
 
         states, actions, rewards, next_states, game_overs = zip(*memory_sample)
-        self.trainer.train_step(states, actions, rewards, next_states, game_overs)
+        self.trainer.train_step(states, actions, rewards, next_states, game_overs, other_model)
 
 
     def prepare_long_memory_train(self):
@@ -236,8 +236,8 @@ class Agent:
         self.trainer.train_step(total_states, total_actions, total_rewards, total_next_states, total_game_overs)
 
 
-    def train_short_memory(self, state, action, reward, next_state, game_over):
-        self.trainer.train_step(state, action, reward, next_state, game_over) # Train for a single step
+    def train_short_memory(self, state, action, reward, next_state, game_over, other_model):
+        self.trainer.train_step(state, action, reward, next_state, game_over, other_model) # Train for a single step
 
 
 
@@ -285,8 +285,8 @@ def train():
         new_state1 = agent1.get_state(game, True)
         new_state2 = agent2.get_state(game, False)
         # train short memory (one step)
-        agent1.train_short_memory(old_state1, final_move1, reward, new_state1, game_over)
-        agent2.train_short_memory(old_state2, final_move2, reward, new_state2, game_over)
+        agent1.train_short_memory(old_state1, final_move1, reward, new_state1, game_over, '2')
+        agent2.train_short_memory(old_state2, final_move2, reward, new_state2, game_over, '1')
 
         # remember
         agent1.remember(old_state1, final_move1, reward, new_state1, game_over)
@@ -297,10 +297,10 @@ def train():
             game.reset()
             agent1.n_games += 1
             agent2.n_games = agent1.n_games
-            states1, actions1, rewards1, next_states1, game_overs1 = agent1.prepare_long_memory_train()
-            states2, actions2, rewards2, next_states2, game_overs2 = agent2.prepare_long_memory_train()
-            # agent1.train_long_memory()
-            # agent2.train_long_memory()
+            # states1, actions1, rewards1, next_states1, game_overs1 = agent1.prepare_long_memory_train()
+            # states2, actions2, rewards2, next_states2, game_overs2 = agent2.prepare_long_memory_train()
+            agent1.train_long_memory('2')
+            agent2.train_long_memory('1')
             # total_states = states1 + states2
             # total_actions = actions1 + actions2
             # total_rewards = rewards1 + rewards2
@@ -311,7 +311,7 @@ def train():
             # agent2.train_long_memory_v2(total_states, total_actions, total_rewards, total_next_states, total_game_overs)
             #trainer.train_step(total_states, total_actions, total_rewards, total_next_states, total_game_overs)
 
-            trainer.train_long_step(states1, actions1, rewards1, next_states1, game_overs1, states2, actions2, rewards2, next_states2, game_overs2)
+            #trainer.train_long_step(states1, actions1, rewards1, next_states1, game_overs1, states2, actions2, rewards2, next_states2, game_overs2)
 
             if score > record:
                 record = score
