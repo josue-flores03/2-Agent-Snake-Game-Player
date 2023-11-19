@@ -107,7 +107,7 @@ class SnakeGameAI:
         reward = 0
         game_over = False
         # Both snakes are dead
-        if self.is_collision() or self.frame_iteration > 100 * len(self.snake1) or self.frame_iteration > 100 * len(self.snake2):
+        if self.is_collision() or self.frame_iteration > 25 * len(self.snake1) or self.frame_iteration > 25 * len(self.snake2):
             game_over = True
             reward = -10
             return reward, game_over, self.score

@@ -15,6 +15,17 @@ class Direction(Enum):
     
 Point = namedtuple('Point', 'x, y')
 
+# Possible circles in a 2 x 2 area
+two_by_two_uldr = [Direction.UP, Direction.LEFT, Direction.DOWN, Direction.RIGHT]
+two_by_two_urdl = [Direction.UP, Direction.RIGHT, Direction.DOWN, Direction.LEFT]
+two_by_two_dlur = [Direction.DOWN, Direction.LEFT, Direction.UP, Direction.RIGHT]
+two_by_two_drul = [Direction.DOWN, Direction.RIGHT, Direction.UP, Direction.LEFT]
+two_by_two_lurd = [Direction.LEFT, Direction.UP, Direction.RIGHT, Direction.DOWN]
+two_by_two_ldru = [Direction.LEFT, Direction.DOWN, Direction.RIGHT, Direction.UP]
+two_by_two_ruld = [Direction.RIGHT, Direction.UP, Direction.LEFT, Direction.DOWN]
+two_by_two_rdlu = [Direction.RIGHT, Direction.DOWN, Direction.LEFT, Direction.UP]
+
+
 # rgb colors
 WHITE = (255, 255, 255)
 RED = (200,0,0)
@@ -29,6 +40,7 @@ class SnakeGameAI:
     def __init__(self, w=640, h=480):
         self.w = w
         self.h = h
+        self.directions = []
         # init display
         self.display = pygame.display.set_mode((self.w, self.h))
         pygame.display.set_caption('Snake')
@@ -48,6 +60,7 @@ class SnakeGameAI:
         self.food = None
         self._place_food()
         self.frame_iteration = 0
+        self.directions.clear()
         
     def _place_food(self):
         x = random.randint(0, (self.w-BLOCK_SIZE )//BLOCK_SIZE )*BLOCK_SIZE 
@@ -71,7 +84,7 @@ class SnakeGameAI:
         # 3. check if game over
         reward = 0
         game_over = False
-        if self.is_collision() or self.frame_iteration > 100  * len(self.snake):
+        if self.is_collision() or self.frame_iteration > 25  * len(self.snake):
             game_over = True
             reward = -10
             return reward, game_over, self.score
@@ -83,12 +96,20 @@ class SnakeGameAI:
             self._place_food()
         else:
             self.snake.pop()
+
+        # 5. check if the snake is going in a circle
+        # if self._check_circle():
+        #     reward -= 5
+        #     print('AHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH')
         
-        # 5. update ui and clock
+        # 6. update ui and clock
         self._update_ui()
         self.clock.tick(SPEED)
 
-        # 6. return game over and score
+        # 7 update list of directions
+        self.directions.append(self.direction)
+
+        # 8. return game over and score
         return reward, game_over, self.score
     
     def is_collision(self, pt = None):
@@ -144,3 +165,24 @@ class SnakeGameAI:
             y -= BLOCK_SIZE
             
         self.head = Point(x, y)
+
+    def _check_circle(self):
+        if len(self.directions) >= 4:
+            previous_directions = [self.directions[-4], self.directions[-3], self.directions[-2], self.directions[-1]]
+            if previous_directions == two_by_two_uldr:
+                return True
+            if previous_directions == two_by_two_urdl: 
+                return True
+            if previous_directions == two_by_two_dlur:
+                return True
+            if previous_directions == two_by_two_drul:
+                return True
+            if previous_directions == two_by_two_lurd:
+                return True
+            if previous_directions == two_by_two_ldru:
+                return True
+            if previous_directions == two_by_two_ruld:
+                return True
+            if previous_directions == two_by_two_rdlu:
+                return True
+        return False
