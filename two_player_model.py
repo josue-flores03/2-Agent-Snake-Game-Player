@@ -6,16 +6,18 @@ import os
 
 class Linear_QNet(nn.Module): 
     
-    def __init__(self, input_size, hidden_size, output_size):
+    def __init__(self, input_size, hidden_size, hidden_size_2, output_size):
         super().__init__()
         self.linear_1 = nn.Linear(input_size, hidden_size)
-        self.linear_2 = nn.Linear(hidden_size, output_size)
+        self.linear_2 = nn.Linear(hidden_size, hidden_size_2)
+        self.linear_3 = nn.Linear(hidden_size_2, output_size)
 
 
 
     def forward(self, x):
         x = F.relu(self.linear_1(x))
-        x = self.linear_2(x)
+        x = F.relu(self.linear_2(x))
+        x = self.linear_3(x)
         return x
     
 
@@ -61,7 +63,7 @@ class QTrainer:
         
         # Get predicted Q values with current states
         pred = self.model(state)
-        other_model = Linear_QNet(15, 256, 3) # initialize your model class
+        other_model = Linear_QNet(22, 256, 64, 3) # initialize your model class
         
         if other_model_path == '1':
             other_model.load_state_dict(torch.load('model/model1.pth'))

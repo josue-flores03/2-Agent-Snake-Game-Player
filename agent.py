@@ -17,7 +17,7 @@ class Agent:
         self.epsilon = 0 # control randomness
         self.gamma = 0.9 # discount rate (MUST be smaller than 1)
         self.memory = deque(maxlen = MAX_MEMORY) # popleft() automatically
-        self.model = Linear_QNet(11, 256, 3) # input is size of states, output is size of action
+        self.model = Linear_QNet(18, 256, 64, 3) # input is size of states, output is size of action
         self.trainer = QTrainer(self.model, lr = lr, gamma = self.gamma)
 
 
@@ -29,6 +29,31 @@ class Agent:
         point_r = Point(head.x + 20, head.y)
         point_u = Point(head.x, head.y - 20)
         point_d = Point(head.x, head.y + 20)
+
+        point_l_u = Point(head.x - 20, head.y - 20)
+        point_l_d = Point(head.x - 20, head.y + 20)
+        point_r_u = Point(head.x + 20, head.y - 20)
+        point_r_d = Point(head.x + 20, head.y + 20)
+
+        point_l_2 = Point(head.x - 40, head.y)
+        point_r_2 = Point(head.x + 40, head.y)
+        point_u_2 = Point(head.x, head.y - 40)
+        point_d_2 = Point(head.x, head.y + 40)
+
+        point_l_2_u_2 = Point(head.x - 40, head.y - 40)
+        point_l_2_d_2 = Point(head.x - 40, head.y + 40)
+        point_r_2_u_2 = Point(head.x + 40, head.y - 40)
+        point_r_2_d_2 = Point(head.x + 40, head.y + 40)
+
+        point_l_u_2 = Point(head.x - 20, head.y - 40)
+        point_l_d_2 = Point(head.x - 20, head.y + 40)
+        point_r_u_2 = Point(head.x + 20, head.y - 40)
+        point_r_d_2 = Point(head.x + 20, head.y + 40)
+
+        point_l_2_u = Point(head.x - 40, head.y - 20)
+        point_l_2_d = Point(head.x - 40, head.y + 20)
+        point_r_2_u = Point(head.x + 40, head.y - 20)
+        point_r_2_d = Point(head.x + 40, head.y + 20)
 
         # Get the current snake direction
         dir_l = game.direction == Direction.LEFT
@@ -54,6 +79,48 @@ class Agent:
             (dir_l and game.is_collision(point_d)) or
             (dir_u and game.is_collision(point_l)) or
             (dir_d and game.is_collision(point_r)),
+
+            # Danger straight 2 blocks away
+            (dir_r and game.is_collision(point_r_2)) or 
+            (dir_l and game.is_collision(point_l_2)) or 
+            (dir_u and game.is_collision(point_u_2)) or 
+            (dir_d and game.is_collision(point_d_2)),
+
+            # Danger right 2 blocks away
+            (dir_r and game.is_collision(point_d_2)) or 
+            (dir_l and game.is_collision(point_u_2)) or 
+            (dir_u and game.is_collision(point_r_2)) or 
+            (dir_d and game.is_collision(point_l_2)),
+
+            # Danger left 2 blocks away
+            (dir_r and game.is_collision(point_u_2)) or
+            (dir_l and game.is_collision(point_d_2)) or
+            (dir_u and game.is_collision(point_l_2)) or
+            (dir_d and game.is_collision(point_r_2)),
+
+            # Danger ring straight left
+            (dir_r and game.is_collision(point_r_u)) or
+            (dir_l and game.is_collision(point_l_d)) or
+            (dir_u and game.is_collision(point_l_u)) or
+            (dir_d and game.is_collision(point_r_d)),
+
+            # Danger ring straight right
+            (dir_r and game.is_collision(point_r_d)) or
+            (dir_l and game.is_collision(point_l_u)) or
+            (dir_u and game.is_collision(point_r_u)) or
+            (dir_d and game.is_collision(point_l_d)),
+
+            # Danger ring back left
+            (dir_r and game.is_collision(point_l_u)) or
+            (dir_l and game.is_collision(point_r_d)) or
+            (dir_u and game.is_collision(point_l_d)) or
+            (dir_d and game.is_collision(point_r_u)),
+
+            # Danger ring back right
+            (dir_r and game.is_collision(point_l_d)) or
+            (dir_l and game.is_collision(point_r_u)) or
+            (dir_u and game.is_collision(point_r_d)) or
+            (dir_d and game.is_collision(point_l_u)),  
 
             # Move direction (only one should be true)
             dir_l, 
