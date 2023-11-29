@@ -315,14 +315,14 @@ class Agent:
 
 
 
-    def train_long_memory(self, other_model):
+    def train_long_memory(self, model_2, other_model):
         if len(self.memory) > BATCH_SIZE:
             memory_sample = random.sample(self.memory, BATCH_SIZE) # returns a list of tuples
         else:
             memory_sample = self.memory
 
         states, actions, rewards, next_states, game_overs = zip(*memory_sample)
-        self.trainer.train_step(states, actions, rewards, next_states, game_overs, other_model)
+        self.trainer.train_step(states, actions, rewards, next_states, game_overs, model_2, other_model)
 
 
     def prepare_long_memory_train(self):
@@ -340,8 +340,8 @@ class Agent:
         self.trainer.train_step(total_states, total_actions, total_rewards, total_next_states, total_game_overs)
 
 
-    def train_short_memory(self, state, action, reward, next_state, game_over, other_model):
-        self.trainer.train_step(state, action, reward, next_state, game_over, other_model) # Train for a single step
+    def train_short_memory(self, state, action, reward, next_state, game_over, model_2, other_model):
+        self.trainer.train_step(state, action, reward, next_state, game_over, model_2, other_model) # Train for a single step
 
 
 
@@ -370,7 +370,7 @@ def train():
     agent1 = Agent()
     agent2 = Agent()
     combined_Learning = Combination(agent1.model, agent2.model)
-    game = SnakeGameAI(root)
+    game = SnakeGameAI()
     gamma = 0.9
     reward_total1=0
     reward_total2=0
@@ -393,8 +393,8 @@ def train():
         new_state1 = agent1.get_state(game, True)
         new_state2 = agent2.get_state(game, False)
         # train short memory (one step)
-        agent1.train_short_memory(old_state1, final_move1, reward1, new_state1, game_over, '2')
-        agent2.train_short_memory(old_state2, final_move2, reward2, new_state2, game_over, '1')
+        agent1.train_short_memory(old_state1, final_move1, reward1, new_state1, game_over, agent2.model, '2')
+        agent2.train_short_memory(old_state2, final_move2, reward2, new_state2, game_over, agent1.model, '1')
 
         # remember
         agent1.remember(old_state1, final_move1, reward1, new_state1, game_over)
@@ -407,8 +407,8 @@ def train():
             agent2.n_games = agent1.n_games
             # states1, actions1, rewards1, next_states1, game_overs1 = agent1.prepare_long_memory_train()
             # states2, actions2, rewards2, next_states2, game_overs2 = agent2.prepare_long_memory_train()
-            agent1.train_long_memory('2')
-            agent2.train_long_memory('1')
+            agent1.train_long_memory(agent2.model, '2')
+            agent2.train_long_memory(agent1.model, '1')
             # total_states = states1 + states2
             # total_actions = actions1 + actions2
             # total_rewards = rewards1 + rewards2
@@ -436,10 +436,8 @@ def train():
 
 
 if __name__ == '__main__':
-    root = tk.Tk()
-    snake = SnakeGameAI(root)
+    snake = SnakeGameAI()
     train()
-    root.mainloop()
 
 
 

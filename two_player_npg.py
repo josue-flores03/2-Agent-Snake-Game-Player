@@ -28,7 +28,7 @@ SPEED = 40
 
 class SnakeGameAI:
     
-    def __init__(self, root, w=640, h=480):
+    def __init__(self, w=640, h=480):
         self.w = w
         self.h = h
         # init display
@@ -36,7 +36,6 @@ class SnakeGameAI:
         pygame.display.set_caption('Snake')
         self.clock = pygame.time.Clock()
         self.reset()
-        self.root = root
         self.prev_distance1 = self.cal_distance1()
         self.prev_distance2 = self.cal_distance2()
     
@@ -111,7 +110,7 @@ class SnakeGameAI:
         elif new_distance1 > self.prev_distance1:
             self.prev_distance1 = new_distance1
             x=-1
-        self.root.after(1000,self.update_distance1)
+       
         return x
 
     def update_distance2(self):
@@ -122,7 +121,7 @@ class SnakeGameAI:
         elif new_distance2 > self.prev_distance2:
             self.prev_distance2 = new_distance2
             x=-1
-        self.root.after(1000, self.update_distance2)
+     
 
         return x
 
@@ -141,7 +140,7 @@ class SnakeGameAI:
             x=-1
         else:
             x=0
-        self.root.after(1000,self.snake_update_distance1)
+
 
     def play_step(self, action_1, action_2):
         self.frame_iteration += 1

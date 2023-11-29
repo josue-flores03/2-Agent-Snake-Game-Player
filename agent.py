@@ -175,7 +175,7 @@ def train():
     total_score = 0
     record = 0
     agent = Agent()
-    game = SnakeGameAI(root)
+    game = SnakeGameAI()
     reward_total=0
     while True:
         # get old state
@@ -214,10 +214,8 @@ def train():
 
 
 if __name__ == '__main__':
-    root = tk.Tk()
-    snake = SnakeGameAI(root)
+    snake = SnakeGameAI()
     train()
-    root.mainloop()
 
 
 

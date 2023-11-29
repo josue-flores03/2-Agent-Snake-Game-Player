@@ -32,6 +32,7 @@ class QTrainer:
         self.lr = lr
         self.gamma = gamma
         self.model = model
+        self.alpha = 0.1
         self.optimizer = optim.Adam(model.parameters(), lr = self.lr)
         self.criterion = nn.MSELoss()
 
@@ -55,8 +56,10 @@ class QTrainer:
         target = pred.clone()
         for idx in range(len(game_over)):
             Q_new = reward[idx]
-            if not game_over[idx]:
-                Q_new = reward[idx] + self.gamma * torch.max(self.model(next_state[idx]))
+            # if not game_over[idx]:
+            Q_new = Q_new + self.alpha * (reward[idx] + self.gamma * torch.max(self.model(next_state[idx])) - torch.max(self.model(state[idx])))
+                # Q_new = torch.max(self.model(next_state[idx])) + self.alpha * (reward[idx] + self.gamma * torch.max(self.model(next_state[idx])) - torch.max(self.model(state[idx])))
+
             
             target[idx][torch.argmax(action).item()] = Q_new
 

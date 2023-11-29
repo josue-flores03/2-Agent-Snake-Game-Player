@@ -34,11 +34,12 @@ class Linear_QNet(nn.Module):
 
 class QTrainer:
 
-    def __init__(self, model, lr, gamma, model_long = None):
+    def __init__(self, model1, lr, gamma, model_long = None):
         self.lr = lr
         self.gamma = gamma
-        self.model = model
-        self.optimizer = optim.Adam(model.parameters(), lr = self.lr)
+        self.model = model1
+        self.alpha = 0.1
+        self.optimizer = optim.Adam(model1.parameters(), lr = self.lr)
         self.criterion = nn.MSELoss()
 
         if model_long != None:
@@ -48,7 +49,7 @@ class QTrainer:
 
 
 
-    def train_step(self, state, action, reward, next_state, game_over, other_model_path = None):
+    def train_step(self, state, action, reward, next_state, game_over, model_2, other_model_path = None):
         state = torch.tensor(state, dtype = torch.float)
         next_state = torch.tensor(next_state, dtype = torch.float)
         action = torch.tensor(action, dtype = torch.long)
@@ -76,9 +77,13 @@ class QTrainer:
             Q_new = reward[idx]
             if not game_over[idx]:
                 if other_model_path == None:
-                    Q_new = reward[idx] + self.gamma * torch.max(self.model(next_state[idx]))
+                    # Q_new = reward[idx] + self.gamma * torch.max(self.model(next_state[idx]))
+                    # Q_new = torch.max(self.model(next_state[idx])) + self.alpha * (reward[idx] + self.gamma * torch.max(self.model(next_state[idx])) - torch.max(self.model(state[idx])))
+                    Q_new = Q_new + self.alpha * (reward[idx] + self.gamma * torch.max(self.model(next_state[idx])) - torch.max(self.model(state[idx])))
                 else:
-                    Q_new = torch.max(other_model(next_state[idx])) * (reward[idx] + self.gamma * torch.max(self.model(next_state[idx])))
+                    # Q_new = torch.max(other_model(next_state[idx])) * (reward[idx] + self.gamma * torch.max(self.model(next_state[idx])))
+                    # Q_new = torch.max(self.model(next_state[idx])) + self.gamma
+                    Q_new = Q_new + self.alpha * (reward[idx] + self.gamma * torch.max(model_2(next_state[idx])) - torch.max(self.model(state[idx])))
 
             target[idx][torch.argmax(action).item()] = Q_new
 

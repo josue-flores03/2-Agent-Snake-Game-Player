@@ -27,7 +27,7 @@ SPEED = 40
 
 class SnakeGameAI:
     
-    def __init__(self,root, w=640, h=480):
+    def __init__(self, w=640, h=480):
         self.w = w
         self.h = h
         # init display
@@ -35,7 +35,6 @@ class SnakeGameAI:
         pygame.display.set_caption('Snake')
         self.clock = pygame.time.Clock()
         self.reset()
-        self.root = root
         self.prev_distance1 = self.cal_distance1()
 
     def reset(self):
@@ -81,7 +80,6 @@ class SnakeGameAI:
 
             self.prev_distance1 = new_distance1
             x=-10
-        self.root.after(1000,self.update_distance1)
         return x
 
 
