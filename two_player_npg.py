@@ -235,10 +235,10 @@ class SnakeGameAI:
                 self.alive1 = False
 
             # hits other snake
-            if self.head1 in self.snake2[1:]:
+            if self.head1 in self.snake2[0:]:
                 self.alive1 = False
 
-            if not self.alive1 or not self.alive2:
+            if not self.alive1:
                 return True
             return False
 
@@ -263,10 +263,10 @@ class SnakeGameAI:
                 self.alive2 = False
 
             # hits other snake
-            if self.head2 in self.snake1[1:]:
+            if self.head2 in self.snake1[0:]:
                 self.alive2 = False
 
-            if not self.alive1 or not self.alive2:
+            if not self.alive2:
                 return True
             return False
 

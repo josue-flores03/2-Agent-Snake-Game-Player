@@ -18,7 +18,7 @@ class Agent:
         self.gamma = 0.9 # discount rate (MUST be smaller than 1)
         self.memory = deque(maxlen = MAX_MEMORY) # popleft() automatically
         # self.model = Linear_QNet(30, 256, 3) # input is size of states, output is size of action
-        self.model = Linear_QNet(22, 256, 64, 3) # input is size of states, output is size of action
+        self.model = Linear_QNet(19, 256, 64, 3) # input is size of states, output is size of action
         self.trainer = QTrainer(self.model, lr = lr, gamma = self.gamma)
 
 
@@ -91,23 +91,23 @@ class Agent:
                 (dir_u1 and game.is_collision(point_l1)) or
                 (dir_d1 and game.is_collision(point_r1)),
 
-                # Danger straight 2 blocks away
-                (dir_r1 and game.is_collision(point_r_21)) or 
-                (dir_l1 and game.is_collision(point_l_21)) or 
-                (dir_u1 and game.is_collision(point_u_21)) or 
-                (dir_d1 and game.is_collision(point_d_21)),
+                # # Danger straight 2 blocks away
+                # (dir_r1 and game.is_collision(point_r_21)) or 
+                # (dir_l1 and game.is_collision(point_l_21)) or 
+                # (dir_u1 and game.is_collision(point_u_21)) or 
+                # (dir_d1 and game.is_collision(point_d_21)),
 
-                # Danger right 2 blocks away
-                (dir_r1 and game.is_collision(point_d_21)) or 
-                (dir_l1 and game.is_collision(point_u_21)) or 
-                (dir_u1 and game.is_collision(point_r_21)) or 
-                (dir_d1 and game.is_collision(point_l_21)),
+                # # Danger right 2 blocks away
+                # (dir_r1 and game.is_collision(point_d_21)) or 
+                # (dir_l1 and game.is_collision(point_u_21)) or 
+                # (dir_u1 and game.is_collision(point_r_21)) or 
+                # (dir_d1 and game.is_collision(point_l_21)),
 
-                # Danger left 2 blocks away
-                (dir_r1 and game.is_collision(point_u_21)) or
-                (dir_l1 and game.is_collision(point_d_21)) or
-                (dir_u1 and game.is_collision(point_l_21)) or
-                (dir_d1 and game.is_collision(point_r_21)),
+                # # Danger left 2 blocks away
+                # (dir_r1 and game.is_collision(point_u_21)) or
+                # (dir_l1 and game.is_collision(point_d_21)) or
+                # (dir_u1 and game.is_collision(point_l_21)) or
+                # (dir_d1 and game.is_collision(point_r_21)),
 
                 # Danger ring straight left
                 (dir_r1 and game.is_collision(point_r_u1)) or
@@ -172,23 +172,23 @@ class Agent:
                 (dir_u2 and game.is_collision2(point_l2)) or
                 (dir_d2 and game.is_collision2(point_r2)),
 
-                # Danger straight 2 blocks away
-                (dir_r2 and game.is_collision(point_r_22)) or 
-                (dir_l2 and game.is_collision(point_l_22)) or 
-                (dir_u2 and game.is_collision(point_u_22)) or 
-                (dir_d2 and game.is_collision(point_d_22)),
+                # # Danger straight 2 blocks away
+                # (dir_r2 and game.is_collision(point_r_22)) or 
+                # (dir_l2 and game.is_collision(point_l_22)) or 
+                # (dir_u2 and game.is_collision(point_u_22)) or 
+                # (dir_d2 and game.is_collision(point_d_22)),
 
-                # Danger right 2 blocks away
-                (dir_r2 and game.is_collision(point_d_22)) or 
-                (dir_l2 and game.is_collision(point_u_22)) or 
-                (dir_u2 and game.is_collision(point_r_22)) or 
-                (dir_d2 and game.is_collision(point_l_22)),
+                # # Danger right 2 blocks away
+                # (dir_r2 and game.is_collision(point_d_22)) or 
+                # (dir_l2 and game.is_collision(point_u_22)) or 
+                # (dir_u2 and game.is_collision(point_r_22)) or 
+                # (dir_d2 and game.is_collision(point_l_22)),
 
-                # Danger left 2 blocks away
-                (dir_r2 and game.is_collision(point_u_22)) or
-                (dir_l2 and game.is_collision(point_d_22)) or
-                (dir_u2 and game.is_collision(point_l_22)) or
-                (dir_d2 and game.is_collision(point_r_22)),
+                # # Danger left 2 blocks away
+                # (dir_r2 and game.is_collision(point_u_22)) or
+                # (dir_l2 and game.is_collision(point_d_22)) or
+                # (dir_u2 and game.is_collision(point_l_22)) or
+                # (dir_d2 and game.is_collision(point_r_22)),
 
                 # Danger ring straight left
                 (dir_r2 and game.is_collision(point_r_u2)) or

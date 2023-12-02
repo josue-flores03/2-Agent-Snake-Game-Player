@@ -64,12 +64,12 @@ class QTrainer:
         
         # Get predicted Q values with current states
         pred = self.model(state)
-        other_model = Linear_QNet(22, 256, 64, 3) # initialize your model class
+        # other_model = Linear_QNet(22, 256, 64, 3) # initialize your model class
         
-        if other_model_path == '1':
-            other_model.load_state_dict(torch.load('model/model1.pth'))
-        elif other_model_path == '2':
-            other_model.load_state_dict(torch.load('model/model2.pth'))
+        # if other_model_path == '1':
+        #     other_model.load_state_dict(torch.load('model/model1.pth'))
+        # elif other_model_path == '2':
+        #     other_model.load_state_dict(torch.load('model/model2.pth'))
 
         # Get predicted Q values with next states
         target = pred.clone()
