@@ -86,6 +86,7 @@ class SnakeGameAI:
         if self.food2 in self.snake1 or self.food2 in self.snake2:
             self.food2 = None
             self._place_food()
+
     def cal_distance1(self):
         x1,y1 = self.head1
         x2,y2 = self.food1
@@ -183,11 +184,6 @@ class SnakeGameAI:
                 reward1 -= 10
                 reward2 -= 10
             return reward1,reward2, game_over, self.score
-
-        # # One snake is dead
-        # if not self.is_collision():
-        #     if self.alive1 and not self.alive2 or not self.alive1 and self.alive2:
-        #         reward += -10
             
         # 4. place new food or just move if alive
         if self.alive1:

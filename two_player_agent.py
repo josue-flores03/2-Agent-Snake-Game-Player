@@ -91,24 +91,6 @@ class Agent:
                 (dir_u1 and game.is_collision(point_l1)) or
                 (dir_d1 and game.is_collision(point_r1)),
 
-                # # Danger straight 2 blocks away
-                # (dir_r1 and game.is_collision(point_r_21)) or 
-                # (dir_l1 and game.is_collision(point_l_21)) or 
-                # (dir_u1 and game.is_collision(point_u_21)) or 
-                # (dir_d1 and game.is_collision(point_d_21)),
-
-                # # Danger right 2 blocks away
-                # (dir_r1 and game.is_collision(point_d_21)) or 
-                # (dir_l1 and game.is_collision(point_u_21)) or 
-                # (dir_u1 and game.is_collision(point_r_21)) or 
-                # (dir_d1 and game.is_collision(point_l_21)),
-
-                # # Danger left 2 blocks away
-                # (dir_r1 and game.is_collision(point_u_21)) or
-                # (dir_l1 and game.is_collision(point_d_21)) or
-                # (dir_u1 and game.is_collision(point_l_21)) or
-                # (dir_d1 and game.is_collision(point_r_21)),
-
                 # Danger ring straight left
                 (dir_r1 and game.is_collision(point_r_u1)) or
                 (dir_l1 and game.is_collision(point_l_d1)) or
@@ -172,23 +154,6 @@ class Agent:
                 (dir_u2 and game.is_collision2(point_l2)) or
                 (dir_d2 and game.is_collision2(point_r2)),
 
-                # # Danger straight 2 blocks away
-                # (dir_r2 and game.is_collision(point_r_22)) or 
-                # (dir_l2 and game.is_collision(point_l_22)) or 
-                # (dir_u2 and game.is_collision(point_u_22)) or 
-                # (dir_d2 and game.is_collision(point_d_22)),
-
-                # # Danger right 2 blocks away
-                # (dir_r2 and game.is_collision(point_d_22)) or 
-                # (dir_l2 and game.is_collision(point_u_22)) or 
-                # (dir_u2 and game.is_collision(point_r_22)) or 
-                # (dir_d2 and game.is_collision(point_l_22)),
-
-                # # Danger left 2 blocks away
-                # (dir_r2 and game.is_collision(point_u_22)) or
-                # (dir_l2 and game.is_collision(point_d_22)) or
-                # (dir_u2 and game.is_collision(point_l_22)) or
-                # (dir_d2 and game.is_collision(point_r_22)),
 
                 # Danger ring straight left
                 (dir_r2 and game.is_collision(point_r_u2)) or
@@ -346,8 +311,7 @@ class Agent:
 
 
     def get_action(self, state):
-        # random moves: (tradeoff between exploration and exploitation)
-        self.epsilon = 80 - self.n_games # play around with hard coded 80
+        self.epsilon = 80 - self.n_games 
         final_move = [0, 0, 0]
         if random.randint(0, 200) < self.epsilon:
             move = random.randint(0, 2) 
@@ -369,13 +333,11 @@ def train():
     record = 0
     agent1 = Agent()
     agent2 = Agent()
-    combined_Learning = Combination(agent1.model, agent2.model)
     game = SnakeGameAI()
     gamma = 0.9
     reward_total1=0
     reward_total2=0
     model = Linear_QNet(22, 256, 64, 3) # input is size of states, output is size of action
-    trainer = QTrainer(model, lr = lr, gamma = gamma, model_long = combined_Learning)
 
     while True:
         # get old state
@@ -405,21 +367,8 @@ def train():
             game.reset()
             agent1.n_games += 1
             agent2.n_games = agent1.n_games
-            # states1, actions1, rewards1, next_states1, game_overs1 = agent1.prepare_long_memory_train()
-            # states2, actions2, rewards2, next_states2, game_overs2 = agent2.prepare_long_memory_train()
             agent1.train_long_memory(agent2.model, '2')
             agent2.train_long_memory(agent1.model, '1')
-            # total_states = states1 + states2
-            # total_actions = actions1 + actions2
-            # total_rewards = rewards1 + rewards2
-            # total_next_states = next_states1 + next_states2
-            # total_game_overs = game_overs1 + game_overs2
-
-            # agent1.train_long_memory_v2(total_states, total_actions, total_rewards, total_next_states, total_game_overs)
-            # agent2.train_long_memory_v2(total_states, total_actions, total_rewards, total_next_states, total_game_overs)
-            #trainer.train_step(total_states, total_actions, total_rewards, total_next_states, total_game_overs)
-
-            #trainer.train_long_step(states1, actions1, rewards1, next_states1, game_overs1, states2, actions2, rewards2, next_states2, game_overs2)
 
             if score > record:
                 record = score

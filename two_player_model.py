@@ -42,11 +42,6 @@ class QTrainer:
         self.optimizer = optim.Adam(model1.parameters(), lr = self.lr)
         self.criterion = nn.MSELoss()
 
-        if model_long != None:
-            self.model_long = model_long
-            self.optimizer_long = optim.Adam(model_long.parameters(), lr = self.lr)
-            self.criterion_long = nn.MSELoss()
-
 
 
     def train_step(self, state, action, reward, next_state, game_over, model_2, other_model_path = None):
@@ -64,25 +59,12 @@ class QTrainer:
         
         # Get predicted Q values with current states
         pred = self.model(state)
-        # other_model = Linear_QNet(22, 256, 64, 3) # initialize your model class
-        
-        # if other_model_path == '1':
-        #     other_model.load_state_dict(torch.load('model/model1.pth'))
-        # elif other_model_path == '2':
-        #     other_model.load_state_dict(torch.load('model/model2.pth'))
 
         # Get predicted Q values with next states
         target = pred.clone()
         for idx in range(len(game_over)):
             Q_new = reward[idx]
             if not game_over[idx]:
-                if other_model_path == None:
-                    # Q_new = reward[idx] + self.gamma * torch.max(self.model(next_state[idx]))
-                    # Q_new = torch.max(self.model(next_state[idx])) + self.alpha * (reward[idx] + self.gamma * torch.max(self.model(next_state[idx])) - torch.max(self.model(state[idx])))
-                    Q_new = Q_new + self.alpha * (reward[idx] + self.gamma * torch.max(self.model(next_state[idx])) - torch.max(self.model(state[idx])))
-                else:
-                    # Q_new = torch.max(other_model(next_state[idx])) * (reward[idx] + self.gamma * torch.max(self.model(next_state[idx])))
-                    # Q_new = torch.max(self.model(next_state[idx])) + self.gamma
                     Q_new = Q_new + self.alpha * (reward[idx] + self.gamma * torch.max(model_2(next_state[idx])) - torch.max(self.model(state[idx])))
 
             target[idx][torch.argmax(action).item()] = Q_new

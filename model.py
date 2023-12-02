@@ -58,7 +58,6 @@ class QTrainer:
             Q_new = reward[idx]
             # if not game_over[idx]:
             Q_new = Q_new + self.alpha * (reward[idx] + self.gamma * torch.max(self.model(next_state[idx])) - torch.max(self.model(state[idx])))
-                # Q_new = torch.max(self.model(next_state[idx])) + self.alpha * (reward[idx] + self.gamma * torch.max(self.model(next_state[idx])) - torch.max(self.model(state[idx])))
 
             
             target[idx][torch.argmax(action).item()] = Q_new
