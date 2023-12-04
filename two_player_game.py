@@ -22,7 +22,7 @@ GREEN = (0, 255, 0)
 BLACK = (0,0,0)
 
 BLOCK_SIZE = 20
-SPEED = 10
+SPEED = 25
 
 class SnakeGame:
     
@@ -34,6 +34,10 @@ class SnakeGame:
         pygame.display.set_caption('Snake')
         self.clock = pygame.time.Clock()
         
+        self.reset()
+        
+    
+    def reset(self):
         # init game state
         self.direction1 = Direction.RIGHT
         self.direction2 = Direction.RIGHT
@@ -43,20 +47,20 @@ class SnakeGame:
         
         self.head1 = Point(self.w / 2, self.h / 2)
         self.snake1 = [self.head1, 
-                      Point(self.head1.x - BLOCK_SIZE, self.head1.y),
-                      Point(self.head1.x - (2 * BLOCK_SIZE), self.head1.y)]
+                      Point((self.w / 2) + (2 * BLOCK_SIZE), (self.h / 2) + (2 * BLOCK_SIZE))]
         
         self.head2 = Point(self.w / 2, (self.h / 2 ) - (2 * BLOCK_SIZE))
         self.snake2 =  [self.head2, 
-                        Point(self.head2.x - BLOCK_SIZE, self.head2.y),
-                        Point(self.head2.x - (2 * BLOCK_SIZE), self.head2.y)]
+                        Point((self.w / 2) - (2 * BLOCK_SIZE), (self.h / 2 ) - (2 * BLOCK_SIZE))]
         
         self.score = 0
         self.food1 = None
         self.food2 = None
         self._place_food()
         self._place_food()
-        
+    
+    
+    
     def _place_food(self):
         if self.food1 == None:
             x = random.randint(0, (self.w-BLOCK_SIZE )//BLOCK_SIZE )*BLOCK_SIZE 
@@ -156,7 +160,7 @@ class SnakeGame:
         if self.head2 in self.snake1[1:]:
             self.alive2 = False  
 
-        if not self.alive1 and not self.alive2:
+        if not self.alive1 or not self.alive2:
             return True
         return False
         
@@ -194,18 +198,19 @@ class SnakeGame:
 
 if __name__ == '__main__':
     game = SnakeGame()
-    
+    max_score = 0
     # game loop
     while True:
         game_over, score = game.play_step()
 
         if game_over == True:
-            break
+            if score > max_score:
+                max_score = score
+            print('Score: ', score, "\tMax Score: ", max_score)
+            game.reset()
         
-    print('Final Score', score)
         
-        
-    pygame.quit()
+    # pygame.quit()
 
 
 # import pygame
