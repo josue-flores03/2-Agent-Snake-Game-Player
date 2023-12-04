@@ -18,7 +18,7 @@ class Agent:
         self.gamma = 0.9 # discount rate (MUST be smaller than 1)
         self.memory = deque(maxlen = MAX_MEMORY) # popleft() automatically
         # self.model = Linear_QNet(30, 256, 3) # input is size of states, output is size of action
-        self.model = Linear_QNet(19, 256, 64, 3) # input is size of states, output is size of action
+        self.model = Linear_QNet(23, 256, 64, 3) # input is size of states, output is size of action
         self.trainer = QTrainer(self.model, lr = lr, gamma = self.gamma)
 
 
@@ -132,6 +132,12 @@ class Agent:
                 game.food2.x > game.head1.x, # Food 2 is right of snake 1
                 game.food2.y < game.head1.y, # Food 2 is up of snake 1
                 game.food2.y > game.head1.y, # Food 2 is down of snake 1
+
+                # snake 2 location for snake 1
+                head2.x < head1.x,
+                head2.x > head1.x,
+                head2.y < head1.y,
+                head2.y > head1.y 
             ]
 
         else:
@@ -196,6 +202,12 @@ class Agent:
                 game.food2.x > game.head2.x, # Food 2 is right of snake 2
                 game.food2.y < game.head2.y, # Food 2 is up of snake 2
                 game.food2.y > game.head2.y, # Food 2 is down of snake 2
+
+                # snake 1 location for snake 2
+                head1.x < head2.x,
+                head1.x > head2.x,
+                head1.y < head2.y,
+                head1.y > head2.y 
             ]
         # state = [
         #     # Danger straight snake 1
@@ -334,10 +346,10 @@ def train():
     agent1 = Agent()
     agent2 = Agent()
     game = SnakeGameAI()
-    gamma = 0.9
+    # gamma = 0.9
     reward_total1=0
     reward_total2=0
-    model = Linear_QNet(22, 256, 64, 3) # input is size of states, output is size of action
+    # model = Linear_QNet(22, 256, 64, 3) # input is size of states, output is size of action
 
     while True:
         # get old state
@@ -521,79 +533,79 @@ if __name__ == '__main__':
 #                 game.food2.y < game.head2.y, # Food 2 is up of snake 2
 #                 game.food2.y > game.head2.y, # Food 2 is down of snake 2
 #             ]
-#         # state = [
-#         #     # Danger straight snake 1
-#         #     (dir_r1 and game.is_collision(point_r1)) or 
-#         #     (dir_l1 and game.is_collision(point_l1)) or 
-#         #     (dir_u1 and game.is_collision(point_u1)) or 
-#         #     (dir_d1 and game.is_collision(point_d1)), 
+        # state = [
+        #     # Danger straight snake 1
+        #     (dir_r1 and game.is_collision(point_r1)) or 
+        #     (dir_l1 and game.is_collision(point_l1)) or 
+        #     (dir_u1 and game.is_collision(point_u1)) or 
+        #     (dir_d1 and game.is_collision(point_d1)), 
 
-#         #     # Danger straight snake 2
-#         #     (dir_r2 and game.is_collision(point_r2)) or 
-#         #     (dir_l2 and game.is_collision(point_l2)) or 
-#         #     (dir_u2 and game.is_collision(point_u2)) or 
-#         #     (dir_d2 and game.is_collision(point_d2)), 
+        #     # Danger straight snake 2
+        #     (dir_r2 and game.is_collision(point_r2)) or 
+        #     (dir_l2 and game.is_collision(point_l2)) or 
+        #     (dir_u2 and game.is_collision(point_u2)) or 
+        #     (dir_d2 and game.is_collision(point_d2)), 
 
-#         #     # Danger right snake 1
-#         #     (dir_r1 and game.is_collision(point_d1)) or 
-#         #     (dir_l1 and game.is_collision(point_u1)) or 
-#         #     (dir_u1 and game.is_collision(point_r1)) or 
-#         #     (dir_d1 and game.is_collision(point_l1)), 
+        #     # Danger right snake 1
+        #     (dir_r1 and game.is_collision(point_d1)) or 
+        #     (dir_l1 and game.is_collision(point_u1)) or 
+        #     (dir_u1 and game.is_collision(point_r1)) or 
+        #     (dir_d1 and game.is_collision(point_l1)), 
 
-#         #     # Danger right snake 2
-#         #     (dir_r2 and game.is_collision(point_d2)) or 
-#         #     (dir_l2 and game.is_collision(point_u2)) or 
-#         #     (dir_u2 and game.is_collision(point_r2)) or 
-#         #     (dir_d2 and game.is_collision(point_l2)), 
+        #     # Danger right snake 2
+        #     (dir_r2 and game.is_collision(point_d2)) or 
+        #     (dir_l2 and game.is_collision(point_u2)) or 
+        #     (dir_u2 and game.is_collision(point_r2)) or 
+        #     (dir_d2 and game.is_collision(point_l2)), 
 
-#         #     # Danger left snake 1
-#         #     (dir_r1 and game.is_collision(point_u1)) or
-#         #     (dir_l1 and game.is_collision(point_d1)) or
-#         #     (dir_u1 and game.is_collision(point_l1)) or
-#         #     (dir_d1 and game.is_collision(point_r1)),
+        #     # Danger left snake 1
+        #     (dir_r1 and game.is_collision(point_u1)) or
+        #     (dir_l1 and game.is_collision(point_d1)) or
+        #     (dir_u1 and game.is_collision(point_l1)) or
+        #     (dir_d1 and game.is_collision(point_r1)),
 
-#         #     # Danger left snake 2
-#         #     (dir_r2 and game.is_collision(point_u2)) or
-#         #     (dir_l2 and game.is_collision(point_d2)) or
-#         #     (dir_u2 and game.is_collision(point_l2)) or
-#         #     (dir_d2 and game.is_collision(point_r2)),
+        #     # Danger left snake 2
+        #     (dir_r2 and game.is_collision(point_u2)) or
+        #     (dir_l2 and game.is_collision(point_d2)) or
+        #     (dir_u2 and game.is_collision(point_l2)) or
+        #     (dir_d2 and game.is_collision(point_r2)),
 
-#         #     # Move direction snake 1(only one should be true)
-#         #     dir_l1, 
-#         #     dir_r1, 
-#         #     dir_u1, 
-#         #     dir_d1,
+        #     # Move direction snake 1(only one should be true)
+        #     dir_l1, 
+        #     dir_r1, 
+        #     dir_u1, 
+        #     dir_d1,
 
-#         #     # Move direction snake 2
-#         #     dir_l2, 
-#         #     dir_r2, 
-#         #     dir_u2, 
-#         #     dir_d2,
+        #     # Move direction snake 2
+        #     dir_l2, 
+        #     dir_r2, 
+        #     dir_u2, 
+        #     dir_d2,
 
-#         #     # Food 1 location for snake 1
-#         #     game.food1.x < game.head1.x, # Food 1 is left of snake 1
-#         #     game.food1.x > game.head1.x, # Food 1 is right of snake 1
-#         #     game.food1.y < game.head1.y, # Food 1 is up of snake 1
-#         #     game.food1.y > game.head1.y, # Food 1 is down of snake 1
+        #     # Food 1 location for snake 1
+        #     game.food1.x < game.head1.x, # Food 1 is left of snake 1
+        #     game.food1.x > game.head1.x, # Food 1 is right of snake 1
+        #     game.food1.y < game.head1.y, # Food 1 is up of snake 1
+        #     game.food1.y > game.head1.y, # Food 1 is down of snake 1
 
-#         #     # Food 2 location for snake 1
-#         #     game.food2.x < game.head1.x, # Food 2 is left of snake 1
-#         #     game.food2.x > game.head1.x, # Food 2 is right of snake 1
-#         #     game.food2.y < game.head1.y, # Food 2 is up of snake 1
-#         #     game.food2.y > game.head1.y, # Food 2 is down of snake 1
+        #     # Food 2 location for snake 1
+        #     game.food2.x < game.head1.x, # Food 2 is left of snake 1
+        #     game.food2.x > game.head1.x, # Food 2 is right of snake 1
+        #     game.food2.y < game.head1.y, # Food 2 is up of snake 1
+        #     game.food2.y > game.head1.y, # Food 2 is down of snake 1
 
-#         #     # Food 1 location for snake 2
-#         #     game.food1.x < game.head2.x, # Food 1 is left of snake 2
-#         #     game.food1.x > game.head2.x, # Food 1 is right of snake 2
-#         #     game.food1.y < game.head2.y, # Food 1 is up of snake 2
-#         #     game.food1.y > game.head2.y, # Food 1 is down of snake 2
+        #     # Food 1 location for snake 2
+        #     game.food1.x < game.head2.x, # Food 1 is left of snake 2
+        #     game.food1.x > game.head2.x, # Food 1 is right of snake 2
+        #     game.food1.y < game.head2.y, # Food 1 is up of snake 2
+        #     game.food1.y > game.head2.y, # Food 1 is down of snake 2
 
-#         #     # Food 2 location for snake 2
-#         #     game.food2.x < game.head2.x, # Food 2 is left of snake 2
-#         #     game.food2.x > game.head2.x, # Food 2 is right of snake 2
-#         #     game.food2.y < game.head2.y, # Food 2 is up of snake 2
-#         #     game.food2.y > game.head2.y, # Food 2 is down of snake 2
-#         # ]
+        #     # Food 2 location for snake 2
+        #     game.food2.x < game.head2.x, # Food 2 is left of snake 2
+        #     game.food2.x > game.head2.x, # Food 2 is right of snake 2
+        #     game.food2.y < game.head2.y, # Food 2 is up of snake 2
+        #     game.food2.y > game.head2.y, # Food 2 is down of snake 2
+        # ]
 
 #         return np.array(state, dtype = int)
 

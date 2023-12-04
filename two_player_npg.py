@@ -51,13 +51,11 @@ class SnakeGameAI:
         
         self.head1 = Point(self.w / 2, self.h / 2)
         self.snake1 = [self.head1, 
-                      Point(self.head1.x - BLOCK_SIZE, self.head1.y),
-                      Point(self.head1.x - (2 * BLOCK_SIZE), self.head1.y)]
+                      Point((self.w / 2) + (2 * BLOCK_SIZE), (self.h / 2) + (2 * BLOCK_SIZE))]
         
         self.head2 = Point(self.w / 2, (self.h / 2 ) - (2 * BLOCK_SIZE))
         self.snake2 =  [self.head2, 
-                        Point(self.head2.x - BLOCK_SIZE, self.head2.y),
-                        Point(self.head2.x - (2 * BLOCK_SIZE), self.head2.y)]
+                        Point((self.w / 2) - (2 * BLOCK_SIZE), (self.h / 2 ) - (2 * BLOCK_SIZE))]
         
         self.score = 0
         self.food1 = None
@@ -142,6 +140,15 @@ class SnakeGameAI:
         else:
             x=0
 
+    # def snake_to_close(self):
+    #     x1, y1 = self.head1
+    #     x2, y2 = self.head2
+    #     distance = math.sqrt((x2 - x1)  2 + (y2 - y1)  2)
+    #     if distance < 40:
+    #         return -5
+    #     else:
+    #         return 5
+
 
     def play_step(self, action_1, action_2):
         self.frame_iteration += 1
@@ -167,6 +174,7 @@ class SnakeGameAI:
 
         reward1 += self.update_distance1()
         reward2 += self.update_distance2()
+
         # Both snakes are dead
         if self.is_collision() or self.frame_iteration > 100 * len(self.snake1):
             game_over = True
@@ -231,7 +239,7 @@ class SnakeGameAI:
                 self.alive1 = False
 
             # hits other snake
-            if self.head1 in self.snake2[0:]:
+            if self.head1 in self.snake2[1:]:
                 self.alive1 = False
 
             if not self.alive1:
@@ -259,7 +267,7 @@ class SnakeGameAI:
                 self.alive2 = False
 
             # hits other snake
-            if self.head2 in self.snake1[0:]:
+            if self.head2 in self.snake1[1:]:
                 self.alive2 = False
 
             if not self.alive2:
